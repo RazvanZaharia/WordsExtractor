@@ -31,14 +31,16 @@ public class ExtractWordsThread extends Thread {
     public void run() {
         try {
             BufferedReader textReader = Utils.getBufferedReader(mFilePath);
-            String receiveString;
-            while ((receiveString = textReader.readLine()) != null) {
-                List<String> words = getLowerCaseWords(receiveString);
-                if (words.size() > 0) {
-                    if (!mIsCanceled) {
-                        mResponseHandler.obtainMessage(NEW_WORDS, -1, -1, words).sendToTarget();
-                    } else {
-                        return;
+            if (textReader != null) {
+                String receiveString;
+                while ((receiveString = textReader.readLine()) != null) {
+                    List<String> words = getLowerCaseWords(receiveString);
+                    if (words.size() > 0) {
+                        if (!mIsCanceled) {
+                            mResponseHandler.obtainMessage(NEW_WORDS, -1, -1, words).sendToTarget();
+                        } else {
+                            return;
+                        }
                     }
                 }
             }

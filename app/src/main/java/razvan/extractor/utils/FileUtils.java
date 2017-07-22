@@ -24,21 +24,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class FileUtils {
-    private static final String TAG = "FileUtils";
 
     public static Intent getFileChooserIntent() {
         Intent getContentIntent = FileUtils.createGetContentIntent();
-        return Intent.createChooser(getContentIntent, "Select a .json file to import");
+        return Intent.createChooser(getContentIntent, "Select a text file");
     }
 
     public static boolean isLocal(String url) {
-        if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
-            return true;
-        }
-        return false;
+        return (url != null && !url.startsWith("http://") && !url.startsWith("https://"));
     }
 
-    public static Intent createGetContentIntent() {
+    private static Intent createGetContentIntent() {
         // Implicitly allow the user to select a particular kind of data
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         // The MIME data type filter
@@ -52,11 +48,10 @@ public class FileUtils {
         return type.equalsIgnoreCase(getExtension(fileName));
     }
 
-    public static String getExtension(String fileName) {
+    private static String getExtension(String fileName) {
         if (fileName == null) {
             return null;
         }
-
         int dot = fileName.lastIndexOf(".");
         if (dot >= 0) {
             return fileName.substring(dot + 1);
