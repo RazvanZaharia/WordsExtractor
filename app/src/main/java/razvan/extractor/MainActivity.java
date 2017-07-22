@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnWordsListener {
     private ProgressDialog mProgressDialog;
     private ExtractedWordsHandler mExtractedWordsHandler;
     private int mNumberOfWords = 0;
+    private Word mMaxAppearCountsWord;
 
     @BindView(R.id.et_file_url)
     EditText mEtFileUrl;
@@ -185,6 +186,14 @@ public class MainActivity extends AppCompatActivity implements OnWordsListener {
             word.setWordCount(word.getWordCount() + 1);
             word.setCountIsPrime(isPrime(word.getWordCount()));
             mWordsCount.put(wordText, word);
+
+            if (mMaxAppearCountsWord == null) {
+                mMaxAppearCountsWord = word;
+            } else {
+                if (mMaxAppearCountsWord.getWordCount() < word.getWordCount()) {
+                    mMaxAppearCountsWord = word;
+                }
+            }
         }
         Log.e(TAG, words.toString());
     }
@@ -194,8 +203,9 @@ public class MainActivity extends AppCompatActivity implements OnWordsListener {
         String output = mWordsCount.toString();
         Log.e(TAG + " OnComplete", output);
 
-        String numberOfWords = "Total Words: ".concat(String.valueOf(mNumberOfWords)).concat("\n\n");
-        mTvOutput.setText(numberOfWords.concat(output));
+        String numberOfWords = "Total Words: ".concat(String.valueOf(mNumberOfWords)).concat("\n");
+        String maxNumberOfWords = "Max no of Appears-> ".concat(mMaxAppearCountsWord.getWordText()).concat(mMaxAppearCountsWord.toString()).concat("\n\n");
+        mTvOutput.setText(numberOfWords.concat(maxNumberOfWords).concat(output));
         mProgressDialog.dismiss();
     }
 }
