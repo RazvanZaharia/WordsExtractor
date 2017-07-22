@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">WordsExtractor</string>
+    <string name="label_file_from_url">Choose File From URL</string>
+    <string name="label_file_from_local_storage">Choose File From Local Storage</string>
+    <string name="default_file_url">http://www.loyalbooks.com/download/text/Railway-Children-by-E-Nesbit.txt</string>
+</resources>
