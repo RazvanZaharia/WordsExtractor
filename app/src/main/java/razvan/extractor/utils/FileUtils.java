@@ -21,7 +21,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class FileUtils {
 
@@ -147,7 +146,7 @@ public class FileUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
+    private static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -175,7 +174,7 @@ public class FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -183,7 +182,7 @@ public class FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -191,7 +190,7 @@ public class FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -199,20 +198,19 @@ public class FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public static boolean isGooglePhotosUri(Uri uri) {
+    private static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    public static String getUsbPath(Context context) {
+    private static String getUsbPath(Context context) {
         UsbDevice device = null;
         String usbPath = null;
 
         UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
 
-        while (deviceIterator.hasNext()) {
-            device = deviceIterator.next();
+        for (UsbDevice usbDevice : deviceList.values()) {
+            device = usbDevice;
         }
 
         if (device != null) {
@@ -221,11 +219,11 @@ public class FileUtils {
                 Method getVolumeListMethod = StorageManager.class.getDeclaredMethod("getVolumeList");
                 Object[] storageVolumeList = (Object[]) getVolumeListMethod.invoke(storageManager);
 
-                for (int i = 0; i < storageVolumeList.length; i++) {
-                    Field pathField = storageVolumeList[i].getClass().getDeclaredField("mPath");
+                for (Object aStorageVolumeList : storageVolumeList) {
+                    Field pathField = aStorageVolumeList.getClass().getDeclaredField("mPath");
                     pathField.setAccessible(true);
 
-                    Object pathObject = pathField.get(storageVolumeList[i]);
+                    Object pathObject = pathField.get(aStorageVolumeList);
 
                     File mountPoint = new File(pathObject.toString());
 
@@ -235,9 +233,9 @@ public class FileUtils {
                 }
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();

@@ -39,7 +39,6 @@ public class PresenterMainActivity extends BaseMvpPresenter<ContractMainActivity
 
     @Override
     public void init() {
-        mWordsCount = new HashMap<>();
         mExtractedWordsHandler = new ExtractedWordsHandler(this);
     }
 
@@ -98,6 +97,11 @@ public class PresenterMainActivity extends BaseMvpPresenter<ContractMainActivity
 
     private void extractWords(String filePath) {
         getMvpView().toggleLoading(true);
+
+        mWordsCount = new HashMap<>();
+        mNumberOfWords = 0;
+        mMaxAppearCountsWord = null;
+
         mExtractWordsThread = new ExtractWordsThread(filePath, mExtractedWordsHandler);
         mExtractWordsThread.start();
     }
