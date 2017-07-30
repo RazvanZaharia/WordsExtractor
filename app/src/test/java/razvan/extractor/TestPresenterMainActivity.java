@@ -21,6 +21,7 @@ public class TestPresenterMainActivity {
 
     private MockView mView;
     private ContractMainActivity.Presenter mPresenter;
+    private OnWordsListener mOnWordsListener;
 
     @Before
     public void setUp() {
@@ -29,6 +30,7 @@ public class TestPresenterMainActivity {
         mPresenter = new PresenterMainActivity();
         mPresenter.attachView(mView);
         mPresenter.init();
+        mOnWordsListener = (OnWordsListener) mPresenter;
     }
 
     @Test
@@ -50,6 +52,16 @@ public class TestPresenterMainActivity {
         mPresenter.onPermissionDenied();
         Assert.assertTrue(mView.showError);
     }
+
+    @Test
+    public void testOnNextCalledWithNull() {
+        try {
+            mOnWordsListener.onNext(null);
+        } catch (NullPointerException e) {
+            Assert.fail("App should not crash");
+        }
+    }
+
 
     private class MockView implements ContractMainActivity.View {
         boolean showUrlError = false;
